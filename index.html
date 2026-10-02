@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#09090b">
+<title>Nova</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;background:#09090b;color:#fff;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif}
+body{overflow:hidden}
+.app{height:100%;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
+header{padding:18px 20px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid #242428}
+.logo{width:42px;height:42px;border-radius:13px;background:linear-gradient(135deg,#7c3aed,#2563eb);display:grid;place-items:center;font-weight:800;font-size:20px;box-shadow:0 8px 25px #0008}
+.title{font-size:22px;font-weight:750}.status{font-size:12px;color:#8e8e93;margin-top:2px}
+main{flex:1;overflow:auto;padding:22px 18px}
+.welcome{margin:30px auto;max-width:420px;text-align:center}.welcome h1{font-size:31px;margin:0 0 8px}.welcome p{color:#98989f;line-height:1.45}
+.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:22px}.chip{background:#18181d;border:1px solid #2b2b31;color:#ddd;padding:10px 13px;border-radius:20px;font-size:13px}
+.message{max-width:86%;padding:12px 14px;border-radius:16px;margin:9px 0;line-height:1.4;white-space:pre-wrap}.user{margin-left:auto;background:#315bdc}.nova{background:#1b1b20;border:1px solid #29292f}
+footer{padding:10px 12px 12px;border-top:1px solid #242428;background:#0d0d10}.bar{display:flex;gap:8px;align-items:center}.input{flex:1;min-height:46px;border-radius:23px;background:#1a1a1f;border:1px solid #303036;color:#fff;padding:0 16px;font-size:16px;outline:none}.btn{width:46px;height:46px;border:0;border-radius:50%;background:#315bdc;color:#fff;font-size:19px}.mic{background:#202026}
+</style>
+</head>
+<body>
+<div class="app">
+<header><div class="logo">N</div><div><div class="title">Nova</div><div class="status">Assistente • pronto</div></div></header>
+<main id="chat"><div class="welcome"><h1>Olá, eu sou a Nova.</h1><p>Digite ou fale um comando. Esta versão já está preparada para evoluir para um aplicativo iOS real.</p><div class="chips"><button class="chip" onclick="run('Abra o YouTube')">Abrir YouTube</button><button class="chip" onclick="run('Abra o WhatsApp')">Abrir WhatsApp</button><button class="chip" onclick="run('Pesquise música no YouTube')">Pesquisar</button></div></div></main>
+<footer><div class="bar"><input id="input" class="input" autocomplete="off" placeholder="Digite um comando..."/><button class="btn mic" id="mic">🎙️</button><button class="btn" id="send">➤</button></div></footer>
+</div>
+<script>
+const input=document.getElementById('input'),chat=document.getElementById('chat');
+function add(text,type){const d=document.createElement('div');d.className='message '+type;d.textContent=text;chat.appendChild(d);chat.scrollTop=chat.scrollHeight}
+function openApp(name,scheme,web){add('Abrindo '+name+'…','nova');location.href=scheme;setTimeout(()=>{location.href=web},1200)}
+function run(raw){const text=raw.trim();if(!text)return;add(text,'user');const t=text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+if(/\b(abra|abrir|abre|inicie|iniciar|vai para|va para)\b/.test(t)){
+ if(t.includes('youtube')) return openApp('YouTube','youtube://','https://www.youtube.com/');
+ if(t.includes('whatsapp')) return openApp('WhatsApp','whatsapp://','https://www.whatsapp.com/');
+ if(t.includes('spotify')) return openApp('Spotify','spotify://','https://open.spotify.com/');
+ if(t.includes('instagram')) return openApp('Instagram','instagram://','https://www.instagram.com/');
+ if(t.includes('telegram')) return openApp('Telegram','tg://','https://telegram.org/');
+}
+if(t.includes('youtube')&&(t.includes('pesquis')||t.includes('procura')||t.includes('buscar'))){let q=text.replace(/.*?(pesquise|pesquisar|procure|procurar|busque|buscar)\s*/i,'').replace(/\s+no\s+youtube\s*$/i,'').trim();if(!q)q='';add('Pesquisando no YouTube…','nova');location.href='youtube://www.youtube.com/results?search_query='+encodeURIComponent(q);setTimeout(()=>location.href='https://www.youtube.com/results?search_query='+encodeURIComponent(q),1200);return}
+add('Entendi o comando. A próxima etapa é ampliar minhas ações e permissões dentro do iPhone.','nova')}
+document.getElementById('send').onclick=()=>{run(input.value);input.value='';input.focus()};input.addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('send').click()});
+</script>
+</body></html>
